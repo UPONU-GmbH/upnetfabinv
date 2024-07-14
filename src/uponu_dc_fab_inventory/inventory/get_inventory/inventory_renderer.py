@@ -3,8 +3,6 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from pprint import pprint
-
 import os
 import yaml
 
@@ -20,7 +18,10 @@ if TYPE_CHECKING:
 
 
 from ..inventory import Inventory
+
 from ..host_vars import AnsibleFacts
+
+from ..group_vars import get_group_vars
 
 FAB_INVENTORY_CLASSES = [
     Inventory
@@ -36,7 +37,7 @@ class InventoryRenderer():
         
         self.shared_utils = SharedUtils(config)
     
-    def get_inventory(self, out_path = "examples/", override_path = "examples/override"):
+    def get_inventory(self, out_path: str, override_path: str):
 
         result = {}
         
@@ -57,7 +58,7 @@ class InventoryRenderer():
         with open(os.path.join(out_path, "inventory.yml"), "w") as fd:
                 yaml.dump(result, fd)
 
-    def get_host_vars(self, out_path = "examples/"):
+    def get_host_vars(self, out_path: str, override_path: str):
 
         host_vars_paths = os.path.join(out_path, "host_vars")
         try:
@@ -66,17 +67,26 @@ class InventoryRenderer():
             pass
 
         for device in self.shared_utils.devices:
+            hostname = get(device, "name", required=True)
             result = {}
+            override = {}
+            override_inventory_path = os.path.join(override_path, "inventory.yml")
+            if os.path.exists(override_inventory_path):
+                with open(override_inventory_path, "r") as fd:
+                    override = yaml.safe_load(fd)
             for cls in FAB_INVENTORY_HOST_VARS_CLASSES:
 
                 fab_inventory_module: InventoryFacts = cls(self.shared_utils, device)
 
                 merge(result, fab_inventory_module.render())
 
-            hostname = get(device, "name", required=True)
 
             with open(os.path.join(host_vars_paths, f"{hostname}.yml"), "w") as fd:
                 yaml.dump(result, fd)
+
+    def get_group_vars(self, out_path: str, override_path: str):
+    
+        get_group_vars(self.shared_utils, out_path, override_path)
 
 
 

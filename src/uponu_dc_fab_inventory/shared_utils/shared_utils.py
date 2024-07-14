@@ -8,6 +8,7 @@ from uponu_dc_fab_inventory.resources import NetboxClient
 from .spines import SpinesMixin
 from .leafs import LeafsMixin
 from .devices import DevicesMixin
+from .ip_addressing import IpAddressingMixin
 
 
 from typing import TYPE_CHECKING
@@ -17,11 +18,12 @@ if TYPE_CHECKING:
 class SharedUtils(
     SpinesMixin,
     LeafsMixin,
-    DevicesMixin
+    DevicesMixin,
+    IpAddressingMixin
 ):
     
     def __init__(self, config: Config) -> None:
 
 
         self.config = config
-        self.netbox = NetboxClient(config.get("netbox.NETBOX_URL"), config.get("netbox.NETBOX_API_TOKEN"), config.get("netbox.dcim_devices_default_filter"))
+        self.netbox = NetboxClient(config)

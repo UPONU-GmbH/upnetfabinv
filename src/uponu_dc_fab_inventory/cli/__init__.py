@@ -73,7 +73,7 @@ def group_vars(ctx: Context):
     
     inventory_renderer = InventoryRenderer(conf)
 
-    inventory_renderer.get_host_vars(out_path, override_path)
+    inventory_renderer.get_group_vars(out_path, override_path)
 
 
 @ansible_inventory.command()

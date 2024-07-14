@@ -10,6 +10,11 @@ def get(dictionary, key, default=None, required=False, separator="."):
     Get a value form a dictionarie or nested dictionary
     """
 
+    if dictionary is None:
+        if required:
+            raise UPONUDCFabInventoryMissingVariableError(key)
+        return default
+
     keys = str(key).split(separator)
     value = dictionary.get(keys[0])
     if value is None:

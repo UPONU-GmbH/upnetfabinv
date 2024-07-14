@@ -16,17 +16,13 @@ if TYPE_CHECKING:
 import logging
 logger = logging.getLogger(__name__)
 
-"""Device ID definition. An integer number used for internal calculations """
-
-from pprint import pprint
-
 @click.group
 @click.pass_context
 def netbox(ctx: Context):
 
     config: Config = ctx.obj["conf"]
     # Initialize the pynetbox API client
-    ctx.obj["netbox_client"] = NetboxClient(config.get("netbox.NETBOX_URL"), config.get("netbox.NETBOX_API_TOKEN"), config.get("netbox.dcim_devices_default_filter"))
+    ctx.obj["netbox_client"] = NetboxClient(config)
 
 @netbox.command
 @click.pass_context
@@ -48,14 +44,22 @@ def setup(ctx: Context):
             ]
         },
         {
-            "name": "avd_switch_groups",
-            "description": "Possible AVD switch groups",
+            "name": "avd_node_types",
+            "description": "Possible AVD node types",
             "order_alphabetically": False,
             "extra_choices": [
                 ["l3leaf", "l3leaf"],
                 ["l3leaf_os10", "l3leaf_os10"],
                 ["l2leaf", "l2leaf"],
                 ["spine", "spine"]
+            ]
+        },
+        {
+            "name": "avd_platforms",
+            "description": "Possible AVD device platforms",
+            "order_alphabetically": False,
+            "extra_choices": [
+                ["S4148-ON", "S4148-ON"],
             ]
         }
     ]
@@ -85,8 +89,8 @@ def setup(ctx: Context):
         },
         {
             "content_types": ["dcim.device"],
-            "name": "avd_switch_group",
-            "label": "Switch Group",
+            "name": "avd_node_type",
+            "label": "Node Type",
             "group_name": "AVD",
             "type": "select",
             "description": "",
@@ -96,29 +100,70 @@ def setup(ctx: Context):
             "ui_editable": "yes",
             "weight": 100,
             "is_cloneable": True,
-            "choice_set": api.extras.custom_field_choice_sets.get(name="avd_switch_groups").id
+            "choice_set": api.extras.custom_field_choice_sets.get(name="avd_node_types").id
         },
         {
             "content_types": ["dcim.device"],
             "name": "avd_switch_id",
             "label": "Switch Id",
             "group_name": "AVD",
-            "type": "select",
+            "type": "integer",
             "description": "Unique Switch ID",
             "search_weight": 1000,
             "filter_logic": "loose",
             "ui_visibility": "visible",
             "ui_editable": "yes",
             "weight": 100,
+            "is_cloneable": False,
+        },
+        {
+            "content_types": ["dcim.device"],
+            "name": "avd_switch_platform",
+            "label": "Switch Platform",
+            "group_name": "AVD",
+            "type": "select",
+            "description": "",
+            "search_weight": 1000,
+            "filter_logic": "loose",
+            "ui_visibility": "visible",
+            "ui_editable": "yes",
+            "weight": 100,
             "is_cloneable": True,
-            "choice_set": api.extras.custom_field_choice_sets.get(name="avd_nos_family").id
+            "choice_set": api.extras.custom_field_choice_sets.get(name="avd_platforms").id
+        },
+        {
+            "content_types": ["dcim.device"],
+            "name": "avd_switch_group_name",
+            "label": "Switch Group Name",
+            "group_name": "AVD",
+            "type": "text",
+            "description": "Name for switch group. Only two devices are allowed to be in one group",
+            "search_weight": 1000,
+            "filter_logic": "loose",
+            "ui_visibility": "visible",
+            "ui_editable": "yes",
+            "weight": 100,
+            "is_cloneable": True,
+        },
+        {
+            "content_types": ["dcim.device"],
+            "name": "avd_bgp_as",
+            "label": "BGP AS number",
+            "group_name": "AVD",
+            "type": "integer",
+            "description": "The bgp as number for a decive",
+            "search_weight": 1000,
+            "filter_logic": "loose",
+            "ui_visibility": "visible",
+            "ui_editable": "yes",
+            "weight": 100,
+            "is_cloneable": True,
         }
     ]
 
     for custom_field_data in custom_fields_data:
         try:
             api.extras.custom_fields.create(custom_field_data)
+            logger.info(f"Created new custem field: {custom_field_data["name"]}")    
         except RequestError as e:
             logger.warn(e.message)
-
-    #custom_field = api.extras.custom_fields.create(custom_field_data)

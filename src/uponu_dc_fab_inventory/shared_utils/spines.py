@@ -17,8 +17,8 @@ class SpinesMixin():
     @cached_property
     def spines(self: SharedUtils) -> list:
 
-        avd_switch_group = "spine"
+        avd_node_type = "spine"
     
-        devices = get_all_items(self.devices, "custom_fields.avd_switch_group", avd_switch_group)
+        devices = get_all_items(self.devices, "custom_fields.avd_node_type", avd_node_type)
 
         return devices
