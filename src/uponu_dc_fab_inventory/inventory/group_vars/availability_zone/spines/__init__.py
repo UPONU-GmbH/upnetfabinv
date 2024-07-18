@@ -5,6 +5,4 @@
 from .spines import Spines
 
 
-__all__ = [
-    "Spines"
-]
+__all__ = ["Spines"]

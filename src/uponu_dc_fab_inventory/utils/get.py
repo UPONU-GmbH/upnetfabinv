@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from uponu_dc_fab_inventory.errors import UPONUDCFabInventoryMissingVariableError
 
+
 def get(dictionary, key, default=None, required=False, separator="."):
     """
     Get a value form a dictionarie or nested dictionary
@@ -23,6 +24,12 @@ def get(dictionary, key, default=None, required=False, separator="."):
         return default
     else:
         if len(keys) > 1:
-            return get(value, separator.join(keys[1:]), default=default, required=required, separator=separator)
+            return get(
+                value,
+                separator.join(keys[1:]),
+                default=default,
+                required=required,
+                separator=separator,
+            )
         else:
             return value

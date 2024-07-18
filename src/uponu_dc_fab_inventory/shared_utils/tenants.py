@@ -12,18 +12,16 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .shared_utils import SharedUtils
 
-class TenatnsMixin():
 
+class TenatnsMixin:
     @cached_property
     def tenants(self: SharedUtils) -> list:
-
         tenants = self.netbox.tenancy_tenants_filter(tag=["avd"])
 
         return tenants
-    
+
     @cached_property
     def vrfs(self: SharedUtils) -> list:
-
         vrfs = self.netbox.ipam_vrfs_filter(tag=["avd"])
 
         return vrfs

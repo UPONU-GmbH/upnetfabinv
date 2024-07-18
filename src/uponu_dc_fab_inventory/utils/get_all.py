@@ -5,7 +5,10 @@ from __future__ import annotations
 
 from .get import get
 
-def get_all(items: list[dict], key, default=None, required=False, separator=".") -> list[dict]:
+
+def get_all(
+    items: list[dict], key, default=None, required=False, separator="."
+) -> list[dict]:
     """
     Get all values form a list of dictionaries
     Parameters

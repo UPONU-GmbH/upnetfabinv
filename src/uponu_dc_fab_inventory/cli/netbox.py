@@ -8,40 +8,38 @@ from ..resources import NetboxClient
 from pynetbox import RequestError
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from click import Context
     from ..resources import Config
     from pynetbox import api as NetboxApi
 
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 @click.group
 @click.pass_context
 def netbox(ctx: Context):
-
     config: Config = ctx.obj["conf"]
     # Initialize the pynetbox API client
     ctx.obj["netbox_client"] = NetboxClient(config)
 
+
 @netbox.command
 @click.pass_context
 def setup(ctx: Context):
-
     api: NetboxApi = ctx.obj["netbox_client"].netbox
-    
+
     # Define the custom field parameters
-    
 
     custom_field_choice_sets_data = [
         {
             "name": "avd_nos_family",
             "description": "Possible AVD NOS families",
             "order_alphabetically": False,
-            "extra_choices": [
-                ["EOS", "EOS"],
-                ["OS10", "OS10"]
-            ]
+            "extra_choices": [["EOS", "EOS"], ["OS10", "OS10"]],
         },
         {
             "name": "avd_node_types",
@@ -51,8 +49,8 @@ def setup(ctx: Context):
                 ["l3leaf", "l3leaf"],
                 ["l3leaf_os10", "l3leaf_os10"],
                 ["l2leaf", "l2leaf"],
-                ["spine", "spine"]
-            ]
+                ["spine", "spine"],
+            ],
         },
         {
             "name": "avd_platforms",
@@ -60,17 +58,17 @@ def setup(ctx: Context):
             "order_alphabetically": False,
             "extra_choices": [
                 ["S4148-ON", "S4148-ON"],
-            ]
-        }
+            ],
+        },
     ]
-    
+
     for custom_field_choice_set_data in custom_field_choice_sets_data:
         try:
             api.extras.custom_field_choice_sets.create(custom_field_choice_set_data)
         except RequestError as e:
             logger.warn(e.message)
 
-    #"default": "",
+    # "default": "",
     custom_fields_data = [
         {
             "content_types": ["dcim.device"],
@@ -85,7 +83,9 @@ def setup(ctx: Context):
             "ui_editable": "yes",
             "weight": 100,
             "is_cloneable": True,
-            "choice_set": api.extras.custom_field_choice_sets.get(name="avd_nos_family").id
+            "choice_set": api.extras.custom_field_choice_sets.get(
+                name="avd_nos_family"
+            ).id,
         },
         {
             "content_types": ["dcim.device"],
@@ -100,7 +100,9 @@ def setup(ctx: Context):
             "ui_editable": "yes",
             "weight": 100,
             "is_cloneable": True,
-            "choice_set": api.extras.custom_field_choice_sets.get(name="avd_node_types").id
+            "choice_set": api.extras.custom_field_choice_sets.get(
+                name="avd_node_types"
+            ).id,
         },
         {
             "content_types": ["dcim.device"],
@@ -129,7 +131,9 @@ def setup(ctx: Context):
             "ui_editable": "yes",
             "weight": 100,
             "is_cloneable": True,
-            "choice_set": api.extras.custom_field_choice_sets.get(name="avd_platforms").id
+            "choice_set": api.extras.custom_field_choice_sets.get(
+                name="avd_platforms"
+            ).id,
         },
         {
             "content_types": ["dcim.device"],
@@ -230,12 +234,12 @@ def setup(ctx: Context):
             "ui_editable": "yes",
             "weight": 100,
             "is_cloneable": True,
-        }
+        },
     ]
 
     for custom_field_data in custom_fields_data:
         try:
             api.extras.custom_fields.create(custom_field_data)
-            logger.info(f"Created new custem field: {custom_field_data["name"]}")    
+            logger.info(f"Created new custem field: {custom_field_data["name"]}")
         except RequestError as e:
             logger.warn(e.message)

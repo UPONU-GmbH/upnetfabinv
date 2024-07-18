@@ -13,20 +13,14 @@ from .tenants import TenatnsMixin
 from .vlans import VlansMixin
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from uponu_dc_fab_inventory.resources import Config
 
+
 class SharedUtils(
-    SpinesMixin,
-    LeafsMixin,
-    DevicesMixin,
-    IpAddressingMixin,
-    TenatnsMixin,
-    VlansMixin
+    SpinesMixin, LeafsMixin, DevicesMixin, IpAddressingMixin, TenatnsMixin, VlansMixin
 ):
-    
     def __init__(self, config: Config) -> None:
-
-
         self.config = config
         self.netbox = NetboxClient(config)

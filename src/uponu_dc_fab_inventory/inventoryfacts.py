@@ -6,10 +6,8 @@ from functools import cached_property
 from .shared_utils.shared_utils import SharedUtils
 
 
-class InventoryFacts():
-
+class InventoryFacts:
     def __init__(self, shared_utils: SharedUtils) -> None:
-        
         self.shared_utils = shared_utils
 
     @classmethod
@@ -24,7 +22,7 @@ class InventoryFacts():
             keys.extend(c_keys)
 
         return keys
-    
+
     @classmethod
     def keys(cls):
         """
@@ -34,7 +32,12 @@ class InventoryFacts():
         The "_" check is added to allow support for "internal" cached_properties storing temporary values.
         """
 
-        return [key for key in cls.__keys() if not key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
+        return [
+            key
+            for key in cls.__keys()
+            if not key.startswith("_")
+            and isinstance(getattr(cls, key), cached_property)
+        ]
 
     @classmethod
     def internal_keys(cls):
@@ -42,8 +45,11 @@ class InventoryFacts():
         Return a list containing the names of attributes starting with "_" and using cached_property class.
         """
 
-        return [key for key in cls.__keys() if key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
-    
+        return [
+            key
+            for key in cls.__keys()
+            if key.startswith("_") and isinstance(getattr(cls, key), cached_property)
+        ]
 
     def get(self, key, default_value=None):
         """
@@ -62,7 +68,11 @@ class InventoryFacts():
         If the value is not cached, it will be resolved by the attribute function first.
         Empty values are removed from the returned data.
         """
-        return {key: getattr(self, key) for key in self.keys() if getattr(self, key) is not None}
+        return {
+            key: getattr(self, key)
+            for key in self.keys()
+            if getattr(self, key) is not None
+        }
 
     def clear_cache(self):
         for key in self.keys() + self.internal_keys():

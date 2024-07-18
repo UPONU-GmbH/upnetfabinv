@@ -9,10 +9,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .shared_utils import SharedUtils
 
-class FabricMixin():
 
+class FabricMixin:
     @cached_property
     def fabs(self: SharedUtils) -> list:
-        
         return ["SI03"]
-    

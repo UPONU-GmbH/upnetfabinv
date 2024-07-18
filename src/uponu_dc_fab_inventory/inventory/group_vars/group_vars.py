@@ -9,14 +9,13 @@ import os
 from uponu_dc_fab_inventory.inventoryfacts import InventoryFacts
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from uponu_dc_fab_inventory.shared_utils import SharedUtils
 
 
 class GroupVars(InventoryFacts):
-
     def __init__(self, filename, shared_utils: SharedUtils) -> None:
-
         super().__init__(shared_utils)
         self._filename = filename
 
@@ -24,8 +23,8 @@ class GroupVars(InventoryFacts):
         """
         Renders the class and
         """
-        
+
         result = self.render()
 
         with open(os.path.join(our_path, self.filename), "w") as fd:
-                yaml.dump(result, fd)
+            yaml.dump(result, fd)

@@ -4,6 +4,4 @@
 
 from .get_group_vars import get_group_vars
 
-__all__ = [
-    "get_group_vars"
-]
+__all__ = ["get_group_vars"]

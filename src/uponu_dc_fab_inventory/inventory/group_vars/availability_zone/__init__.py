@@ -5,7 +5,4 @@
 from .availability_zone import AvailabilityZone
 
 
-
-__all__ = [
-    "AvailabilityZone"
-]
+__all__ = ["AvailabilityZone"]

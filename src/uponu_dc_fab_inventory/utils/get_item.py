@@ -9,8 +9,13 @@ from .get import get
 from uponu_dc_fab_inventory.errors import UPONUDCFabInventoryMissingVariableError
 
 
-
-def get_item(data, key: str, value: Any | None = None, required: bool = False, separator: str = ".") -> Any:
+def get_item(
+    data,
+    key: str,
+    value: Any | None = None,
+    required: bool = False,
+    separator: str = ".",
+) -> Any:
     """
     Get an item where a spicific path exists, returns only the first match
 
@@ -46,6 +51,6 @@ def get_item(data, key: str, value: Any | None = None, required: bool = False, s
                 for val in value:
                     if val == item_value:
                         return item
-    
+
     if required:
         raise UPONUDCFabInventoryMissingVariableError(key)

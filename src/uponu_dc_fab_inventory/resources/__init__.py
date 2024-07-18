@@ -5,7 +5,4 @@
 from .netbox import NetboxClient
 from .config import Config
 
-__all__ = [
-    "NetboxClient",
-    "Config"
-]
+__all__ = ["NetboxClient", "Config"]

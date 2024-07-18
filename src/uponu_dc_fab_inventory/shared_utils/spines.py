@@ -12,13 +12,14 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .shared_utils import SharedUtils
 
-class SpinesMixin():
 
+class SpinesMixin:
     @cached_property
     def spines(self: SharedUtils) -> list:
-
         avd_node_type = "spine"
-    
-        devices = get_all_items(self.devices, "custom_fields.avd_node_type", avd_node_type)
+
+        devices = get_all_items(
+            self.devices, "custom_fields.avd_node_type", avd_node_type
+        )
 
         return devices

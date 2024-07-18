@@ -10,14 +10,9 @@ from uponu_dc_fab_inventory.utils import get
 
 
 class Config:
-
     def __init__(self, config_path: str) -> None:
-        
         with open(config_path, "rb") as fd:
-
             self.conf = tomllib.load(fd)
 
-    
     def get(self, key: str, default: str | None = None, requried: bool = False) -> None:
-
         return get(self.conf, key, default, requried)

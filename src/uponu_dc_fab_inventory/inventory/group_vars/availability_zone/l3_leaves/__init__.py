@@ -6,7 +6,4 @@ from .l3_leaves_eos import L3LeavesEOS
 from .l3_leaves_os10 import L3LeavesOS10
 
 
-__all__ = [
-    "L3LeavesEOS",
-    "L3LeavesOS10"
-]
+__all__ = ["L3LeavesEOS", "L3LeavesOS10"]

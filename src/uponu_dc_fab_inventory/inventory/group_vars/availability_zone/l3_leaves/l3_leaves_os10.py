@@ -9,10 +9,10 @@ from functools import cached_property
 
 from uponu_dc_fab_inventory.shared_utils.shared_utils import SharedUtils
 
-class L3LeavesOS10 (
+
+class L3LeavesOS10(
     InventoryFacts,
 ):
-    
     def __init__(self, shared_utils: SharedUtils, avialability_zone: str) -> None:
         super().__init__(shared_utils)
 
@@ -20,13 +20,12 @@ class L3LeavesOS10 (
 
     @cached_property
     def type(self):
-
         return "l3leaf_os10"
 
     @cached_property
     def overlay_rd_type(self):
         """
-        Overlay rd type to use vtep for RD. 
+        Overlay rd type to use vtep for RD.
         Forr vlti the RDs must be the same on the vlti peers
         """
 
@@ -34,5 +33,4 @@ class L3LeavesOS10 (
 
     @cached_property
     def _filename(self):
-
         return f"{self._avialability_zone}_L3_LEAVES_OS10.yml"

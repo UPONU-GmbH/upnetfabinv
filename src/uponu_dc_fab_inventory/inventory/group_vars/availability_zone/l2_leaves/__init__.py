@@ -5,6 +5,4 @@
 from .l2_leaves import L2Leaves
 
 
-__all__ = [
-    "L2Leaves"
-]
+__all__ = ["L2Leaves"]

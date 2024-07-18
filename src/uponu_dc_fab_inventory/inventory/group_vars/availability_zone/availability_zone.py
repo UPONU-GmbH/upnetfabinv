@@ -14,11 +14,7 @@ from .spine import SpineMixin
 from .l3leaf import L3leafMixin
 
 
-class AvailabilityZone(
-    InventoryFacts,
-    SpineMixin,
-    L3leafMixin
-):
+class AvailabilityZone(InventoryFacts, SpineMixin, L3leafMixin):
     def __init__(self, shared_utils: SharedUtils, avialability_zone: str) -> None:
         super().__init__(shared_utils)
 
@@ -26,5 +22,4 @@ class AvailabilityZone(
 
     @cached_property
     def _filename(self):
-
         return f"{self._avialability_zone}.yml"

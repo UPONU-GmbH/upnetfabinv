@@ -1,17 +1,17 @@
 import pynetbox
 
-def main():
 
+def main():
     # Replace with your NetBox URL and API token
-    NETBOX_URL = 'http://127.0.0.1:8000'
-    NETBOX_API_TOKEN = '115ace3a67cf5015dbdb31d647ffbd04340af7bb'
+    NETBOX_URL = "http://127.0.0.1:8000"
+    NETBOX_API_TOKEN = "115ace3a67cf5015dbdb31d647ffbd04340af7bb"
 
     # Initialize the pynetbox API
     nb = pynetbox.api(NETBOX_URL, token=NETBOX_API_TOKEN)
 
     # Specify the site and role you are interested in
-    site_name = 'SI03'
-    role_name = 'Spine-Leaf Network'
+    site_name = "SI03"
+    role_name = "Spine-Leaf Network"
 
     # Get the site ID by filtering the sites by name
     site = nb.dcim.sites.get(name=site_name)
@@ -30,7 +30,10 @@ def main():
 
     # Print the devices
     for device in devices:
-        print(f"Device Name: {device.name}, Device ID: {device.id}, Role: {device.device_role.name}, Site: {device.site.name}")
+        print(
+            f"Device Name: {device.name}, Device ID: {device.id}, Role: {device.device_role.name}, Site: {device.site.name}"
+        )
+
 
 if __name__ == "__main__":
     main()

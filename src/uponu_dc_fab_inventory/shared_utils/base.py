@@ -9,9 +9,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .shared_utils import SharedUtils
 
-class BaseMixin():
 
+class BaseMixin:
     @cached_property
     def az_name(self: SharedUtils) -> str:
-        
         return "DC1"

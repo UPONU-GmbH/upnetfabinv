@@ -9,10 +9,10 @@ from functools import cached_property
 
 from uponu_dc_fab_inventory.shared_utils.shared_utils import SharedUtils
 
-class L2Leaves (
+
+class L2Leaves(
     InventoryFacts,
 ):
-    
     def __init__(self, shared_utils: SharedUtils, avialability_zone: str) -> None:
         super().__init__(shared_utils)
 
@@ -20,11 +20,8 @@ class L2Leaves (
 
     @cached_property
     def type(self):
-
         return "l2leaf"
-
 
     @cached_property
     def _filename(self):
-
         return f"{self._avialability_zone}_L2_LEAVES.yml"

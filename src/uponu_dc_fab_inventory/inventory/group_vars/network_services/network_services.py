@@ -13,14 +13,10 @@ from uponu_dc_fab_inventory.utils import get
 from .tenants import TennantsMixin
 
 
-class NetworkServices(
-    InventoryFacts,
-    TennantsMixin
-):
+class NetworkServices(InventoryFacts, TennantsMixin):
     def __init__(self, shared_utils: SharedUtils) -> None:
         super().__init__(shared_utils)
 
     @cached_property
     def _filename(self):
-
         return "NETWORK_SERVICES.yml"

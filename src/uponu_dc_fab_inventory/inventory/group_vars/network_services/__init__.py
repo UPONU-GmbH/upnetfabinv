@@ -4,6 +4,4 @@
 
 from .network_services import NetworkServices
 
-__all__ = [
-    "NetworkServices"
-]
+__all__ = ["NetworkServices"]

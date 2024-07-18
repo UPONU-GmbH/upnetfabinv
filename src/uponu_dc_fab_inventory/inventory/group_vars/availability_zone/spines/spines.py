@@ -9,10 +9,10 @@ from functools import cached_property
 
 from uponu_dc_fab_inventory.shared_utils.shared_utils import SharedUtils
 
+
 class Spines(
     InventoryFacts,
 ):
-    
     def __init__(self, shared_utils: SharedUtils, avialability_zone: str) -> None:
         super().__init__(shared_utils)
 
@@ -20,11 +20,8 @@ class Spines(
 
     @cached_property
     def type(self):
-
         return "spine"
-
 
     @cached_property
     def _filename(self):
-
         return f"{self._avialability_zone}_SPINES.yml"

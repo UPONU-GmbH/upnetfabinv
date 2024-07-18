@@ -9,8 +9,13 @@ from .get import get
 from uponu_dc_fab_inventory.errors import UPONUDCFabInventoryMissingVariableError
 
 
-
-def get_all_items(data, key: str, value: Any | None = None, required: bool = False, separator: str = ".") -> list[Any]:
+def get_all_items(
+    data,
+    key: str,
+    value: Any | None = None,
+    required: bool = False,
+    separator: str = ".",
+) -> list[Any]:
     """
     Get all items where a spicific path exists
 
@@ -48,7 +53,7 @@ def get_all_items(data, key: str, value: Any | None = None, required: bool = Fal
                 for val in value:
                     if val == item_value:
                         output.append(item)
-    
+
     if required and len(output) == 0:
         raise UPONUDCFabInventoryMissingVariableError(key)
 

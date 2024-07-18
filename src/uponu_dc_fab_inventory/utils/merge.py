@@ -7,12 +7,21 @@ from __future__ import annotations
 from copy import deepcopy
 from deepmerge import Merger
 
+
 def _strategy_must_match(config, path, base, nxt):
     if base != nxt:
         raise ValueError(f"Values of {'.'.join(path)} do not match: {base} != {nxt}")
     return base
 
-def merge(base, *nxt_list, recursive=True, list_merge="append", same_key_strategy="override", destructive_merge=True):
+
+def merge(
+    base,
+    *nxt_list,
+    recursive=True,
+    list_merge="append",
+    same_key_strategy="override",
+    destructive_merge=True,
+):
     """
     Merge two or more data sets using deepmerge
 
