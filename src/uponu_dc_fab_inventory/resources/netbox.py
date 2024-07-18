@@ -38,11 +38,15 @@ class NetboxClient():
         default_dcim_device_filter = {
             "site_id": get_all(sites, "id", required=True)
         }
+        self.default_dcim_device_filter = default_dcim_device_filter
 
         default_dcim_interface_filter = {}
-
-        self.default_dcim_device_filter = default_dcim_device_filter
         self.default_dcim_interface_filter = default_dcim_interface_filter
+
+        default_ipam_vlan_filter = {
+            "site_id": get_all(sites, "id", required=True)
+        }
+        self.default_ipam_vlan_filter = default_ipam_vlan_filter
 
         merge(self.default_dcim_device_filter, config.get("netbox.dcim_devices_default_filter"))
 
@@ -79,6 +83,32 @@ class NetboxClient():
     def ipam_ip_addresses_filter(self, **filter) -> list[dict]:
 
         netbox_res = self.netbox.ipam.ip_addresses.filter(**filter)
+
+        res = response_as_list(netbox_res)
+
+        return res
+    
+    def ipam_vrfs_filter(self, **filter) -> list[dict]:
+
+        netbox_res = self.netbox.ipam.vrfs.filter(**filter)
+
+        res = response_as_list(netbox_res)
+
+        return res
+    
+    def ipam_vlan_filter(self, **filter) -> list[dict]:
+
+        filter = merge(self.default_ipam_vlan_filter, filter, destructive_merge=False)
+
+        netbox_res = self.netbox.ipam.vlans.filter(**filter)
+
+        res = response_as_list(netbox_res)
+
+        return res
+    
+    def tenancy_tenants_filter(self, **filter) -> list[dict]:
+
+        netbox_res = self.netbox.tenancy.tenants.filter(**filter)
 
         res = response_as_list(netbox_res)
 

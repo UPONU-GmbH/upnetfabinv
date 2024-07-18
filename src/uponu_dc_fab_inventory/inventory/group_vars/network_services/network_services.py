@@ -8,23 +8,19 @@ from uponu_dc_fab_inventory.inventoryfacts import InventoryFacts
 from functools import cached_property
 
 from uponu_dc_fab_inventory.shared_utils.shared_utils import SharedUtils
+from uponu_dc_fab_inventory.utils import get
 
-class L3LeavesEOS (
+from .tenants import TennantsMixin
+
+
+class NetworkServices(
     InventoryFacts,
+    TennantsMixin
 ):
-    
-    def __init__(self, shared_utils: SharedUtils, avialability_zone: str) -> None:
+    def __init__(self, shared_utils: SharedUtils) -> None:
         super().__init__(shared_utils)
-
-        self._avialability_zone = avialability_zone
-
-    @cached_property
-    def type(self):
-
-        return "l3leaf"
-
 
     @cached_property
     def _filename(self):
 
-        return f"{self._avialability_zone}_L3_LEAVES_EOS.yml"
+        return "NETWORK_SERVICES.yml"

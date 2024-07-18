@@ -7,6 +7,8 @@ from __future__ import annotations
 import os
 import yaml
 
+from .network_services import NetworkServices
+
 from .availability_zone import AvailabilityZone
 from .availability_zone.spines import Spines
 from .availability_zone.l2_leaves import L2Leaves
@@ -20,7 +22,7 @@ if TYPE_CHECKING:
     from uponu_dc_fab_inventory.inventoryfacts import InventoryFacts
 
 FAB_INVENTORY_GROUP_VARS_CLASSES = [
-    
+    NetworkServices
 ]
 
 FAB_INVENTORY_GROUP_VARS_CLASSES_AVAILABILITY_ZONE = [
@@ -30,6 +32,22 @@ FAB_INVENTORY_GROUP_VARS_CLASSES_AVAILABILITY_ZONE = [
     L3LeavesEOS,
     L3LeavesOS10
 ]
+
+
+def _render_group_vars(group_vars_module: InventoryFacts, group_vars_path: str, override_path: str):
+
+    result = group_vars_module.render()
+
+    override = {}
+    override_inventory_path = os.path.join(override_path, group_vars_module._filename)
+    if os.path.exists(override_inventory_path):
+        with open(override_inventory_path, "r") as fd:
+            override = yaml.safe_load(fd) 
+
+        merge(result, override)
+
+    with open(os.path.join(group_vars_path, group_vars_module._filename), "w") as fd:
+        yaml.dump(result, fd, sort_keys=False)
 
 def get_group_vars(shared_utils: SharedUtils, out_path: str, override_path: str) -> None:
     """
@@ -45,27 +63,26 @@ def get_group_vars(shared_utils: SharedUtils, out_path: str, override_path: str)
     """
 
 
-    group_vars_paths = os.path.join(out_path, "group_vars")
+    group_vars_path = os.path.join(out_path, "group_vars")
     try:
-        os.mkdir(group_vars_paths)
+        os.mkdir(group_vars_path)
     except FileExistsError:
         pass
+
+    for cls in FAB_INVENTORY_GROUP_VARS_CLASSES:
+
+        group_vars_module: InventoryFacts = cls(shared_utils)
+
+        _render_group_vars(group_vars_module, group_vars_path, override_path)
+
+
 
     for az in shared_utils.config.get("fabric.availability_zones"):
         for cls in FAB_INVENTORY_GROUP_VARS_CLASSES_AVAILABILITY_ZONE:
 
-            group_vars_module_module: InventoryFacts = cls(shared_utils, az)
+            group_vars_module: InventoryFacts = cls(shared_utils, az)
 
-            result = group_vars_module_module.render()
+            _render_group_vars(group_vars_module, group_vars_path, override_path)
 
-            override = {}
-            override_inventory_path = os.path.join(override_path, group_vars_module_module._filename)
-            if os.path.exists(override_inventory_path):
-                with open(override_inventory_path, "r") as fd:
-                    override = yaml.safe_load(fd) 
 
-                merge(result, override)
-
-            with open(os.path.join(group_vars_paths, group_vars_module_module._filename), "w") as fd:
-                yaml.dump(result, fd)
 

@@ -9,7 +9,8 @@ from .spines import SpinesMixin
 from .leafs import LeafsMixin
 from .devices import DevicesMixin
 from .ip_addressing import IpAddressingMixin
-
+from .tenants import TenatnsMixin
+from .vlans import VlansMixin
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -19,7 +20,9 @@ class SharedUtils(
     SpinesMixin,
     LeafsMixin,
     DevicesMixin,
-    IpAddressingMixin
+    IpAddressingMixin,
+    TenatnsMixin,
+    VlansMixin
 ):
     
     def __init__(self, config: Config) -> None:
