@@ -51,7 +51,7 @@ class DevicesMixin:
                         ),
                         "address",
                     ),
-                    "link_peers": get(interface, "link_peers", default=[]),
+                    "interface": interface,
                 }
             )
 

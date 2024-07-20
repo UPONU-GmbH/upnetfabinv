@@ -11,6 +11,7 @@ from .devices import DevicesMixin
 from .ip_addressing import IpAddressingMixin
 from .tenants import TenatnsMixin
 from .vlans import VlansMixin
+from .servers import ServersMixin
 
 from typing import TYPE_CHECKING
 
@@ -19,7 +20,13 @@ if TYPE_CHECKING:
 
 
 class SharedUtils(
-    SpinesMixin, LeafsMixin, DevicesMixin, IpAddressingMixin, TenatnsMixin, VlansMixin
+    SpinesMixin,
+    LeafsMixin,
+    DevicesMixin,
+    IpAddressingMixin,
+    TenatnsMixin,
+    VlansMixin,
+    ServersMixin,
 ):
     def __init__(self, config: Config) -> None:
         self.config = config

@@ -129,14 +129,16 @@ class L3leafMixin:
         }
 
         for interface in get(node, "interfaces"):
-            for link_peer in get(interface, "link_peers"):
-                if peer_device := get(link_peer, "device"):
+            for connected_endpoint in get(
+                interface, "interface.connected_endpoints", default=[]
+            ):
+                if peer_device := get(connected_endpoint, "device"):
                     peer = self.shared_utils.device(get(peer_device, "id"))
 
                     if get(peer, "custom_fields.avd_node_type") == "spine":
                         uplinks["uplink_switches"].append(get(peer, "name"))
                         uplinks["uplink_switch_interfaces"].append(
-                            get(link_peer, "name")
+                            get(connected_endpoint, "name")
                         )
                         uplinks["uplink_interfaces"].append(get(interface, "name"))
 

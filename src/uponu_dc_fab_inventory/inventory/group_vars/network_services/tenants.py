@@ -14,8 +14,6 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .network_services import NetworkServices
 
-from pprint import pprint
-
 
 class TennantsMixin:
     @cached_property

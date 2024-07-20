@@ -8,8 +8,8 @@ import click
 from uponu_dc_fab_inventory.resources import Config
 
 from uponu_dc_fab_inventory.inventory.get_inventory import InventoryRenderer
-
 from .netbox import netbox
+
 
 from typing import TYPE_CHECKING
 

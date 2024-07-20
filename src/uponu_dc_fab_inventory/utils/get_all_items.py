@@ -53,6 +53,8 @@ def get_all_items(
                 for val in value:
                     if val == item_value:
                         output.append(item)
+            elif value is None and item_value is not None:
+                output.append(item)
 
     if required and len(output) == 0:
         raise UPONUDCFabInventoryMissingVariableError(key)

@@ -60,6 +60,12 @@ def setup(ctx: Context):
                 ["S4148-ON", "S4148-ON"],
             ],
         },
+        {
+            "name": "avd_endpoint_types",
+            "description": "Possible AVD endpoints types",
+            "order_alphabetically": False,
+            "extra_choices": [["server", "server"]],
+        },
     ]
 
     for custom_field_choice_set_data in custom_field_choice_sets_data:
@@ -234,6 +240,23 @@ def setup(ctx: Context):
             "ui_editable": "yes",
             "weight": 100,
             "is_cloneable": True,
+        },
+        {
+            "content_types": ["dcim.device"],
+            "name": "avd_endpoint_type",
+            "label": "Endpoint Type",
+            "group_name": "AVD",
+            "type": "select",
+            "description": "",
+            "search_weight": 1000,
+            "filter_logic": "loose",
+            "ui_visibility": "visible",
+            "ui_editable": "yes",
+            "weight": 100,
+            "is_cloneable": True,
+            "choice_set": api.extras.custom_field_choice_sets.get(
+                name="avd_endpoint_types"
+            ).id,
         },
     ]
 
