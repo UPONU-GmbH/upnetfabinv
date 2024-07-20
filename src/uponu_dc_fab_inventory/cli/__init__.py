@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import click
+import os
 
 from uponu_dc_fab_inventory.resources import Config
 
@@ -19,9 +20,23 @@ if TYPE_CHECKING:
 
 @click.group()
 @click.pass_context
-def cli(ctx: Context):
+@click.option(
+    "--config",
+    help="Config file path.",
+)
+def cli(ctx: Context, config: str| None):
     ctx.ensure_object(dict)
-    ctx.obj["conf"] = Config("examples/config.toml")
+
+    if config:
+        config_path = config
+    else:
+        if os.path.exists(
+            os.path.join(".upnetfabinv", "config.toml")):
+            config_path = os.path.join(".upnetfabinv", "config.toml")
+        elif  os.path.exists("config.toml"):
+            config_path = "config.toml"
+
+    ctx.obj["conf"] = Config(config_path)
 
 
 @cli.group()
