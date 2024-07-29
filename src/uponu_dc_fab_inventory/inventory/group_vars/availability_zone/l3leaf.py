@@ -28,7 +28,7 @@ class L3leafMixin:
 
         node_groups = []
 
-        for node_group in self._get_node_groups(l3leafs_os10):
+        for node_group in self.shared_utils.get_node_groups(l3leafs_os10):
             node_groups.append(
                 self._get_l3leaf_os10_node_group(node_group, l3leafs_os10)
             )
@@ -49,7 +49,7 @@ class L3leafMixin:
 
         node_groups = []
 
-        for node_group in self._get_node_groups(l3leafs):
+        for node_group in self.shared_utils.get_node_groups(l3leafs):
             node_groups.append(self._get_l3leaf_node_group(node_group, l3leafs))
 
         res = {"node_groups": node_groups}
@@ -65,6 +65,7 @@ class L3leafMixin:
             "name": get(node, "name", required=True),
             "id": get(node, "custom_fields.avd_switch_id", required=True),
             "mgmt_ip": get(node, "oob_ip.address", required=True),
+            "bgp_as": get(node, "custom_fields.avd_bgp_as", required=True)
         }
 
         if platform := get(node, "custom_fields.avd_platform"):
@@ -73,13 +74,18 @@ class L3leafMixin:
         if loopback_ipv4_address := self.shared_utils.get_loopback_ip(node):
             node_config["loopback_ipv4_address"] = loopback_ipv4_address
 
-        if vtep_ipv4_address := self.shared_utils.get_vtep_ip(node):
-            node_config["vtep_ipv4_address"] = vtep_ipv4_address
+        if vtep_loopback_ipv4_address := self.shared_utils.get_vtep_ip(node):
+            node_config["vtep_loopback_ipv4_address"] = vtep_loopback_ipv4_address
 
         return node_config
+    
+    def _get_l3leaf_os10_node(self: AvailabilityZone, node: dict, node_group: str) -> dict:
 
-    def _get_node_groups(self: AvailabilityZone, nodes: list[dict]) -> dict:
-        return set(get_all(nodes, "custom_fields.avd_switch_group_name"))
+        node_config = {
+            "vlti_interfaces": self.shared_utils.mlag_interfaces(node, node_group)
+        }
+
+        return node_config
 
     def _get_l3leaf_os10_node_group(
         self: AvailabilityZone, node_group: str, all_nodes: list[dict]
@@ -94,6 +100,7 @@ class L3leafMixin:
             l3leaf_os10_node = self._get_l3leaf_all_node(node)
 
             merge(l3leaf_os10_node, self._get_l3leaf_all_uplink_connections(node))
+            merge(l3leaf_os10_node, self._get_l3leaf_os10_node(node, node_group))
 
             nodes.append(l3leaf_os10_node)
 
@@ -114,6 +121,7 @@ class L3leafMixin:
             l3leaf_node = self._get_l3leaf_all_node(node)
 
             merge(l3leaf_node, self._get_l3leaf_all_uplink_connections(node))
+            merge(l3leaf_node, self._get_l3leaf_eos_node(node, node_group))
 
             nodes.append(l3leaf_node)
 
@@ -143,3 +151,11 @@ class L3leafMixin:
                         uplinks["uplink_interfaces"].append(get(interface, "name"))
 
         return uplinks
+
+    def _get_l3leaf_eos_node(self: AvailabilityZone, node: dict, node_group: str) -> dict:
+
+        node_config = {
+            "mlag_interfaces": self.shared_utils.mlag_interfaces(node, node_group)
+        }
+
+        return node_config

@@ -9,7 +9,7 @@ import yaml
 
 from uponu_dc_fab_inventory.inventoryfacts import InventoryFacts
 from uponu_dc_fab_inventory.shared_utils import SharedUtils
-from uponu_dc_fab_inventory.utils import merge, get
+from uponu_dc_fab_inventory.utils import merge, get, get_all_items
 
 from typing import TYPE_CHECKING
 
@@ -49,7 +49,7 @@ class InventoryRenderer:
         merge(result, override)
 
         with open(os.path.join(out_path, "inventory.yml"), "w") as fd:
-            yaml.dump(result, fd)
+            yaml.dump(result, fd, sort_keys=False)
 
     def get_host_vars(self, out_path: str, override_path: str):
         host_vars_paths = os.path.join(out_path, "host_vars")
@@ -58,7 +58,7 @@ class InventoryRenderer:
         except FileExistsError:
             pass
 
-        for device in self.shared_utils.devices:
+        for device in get_all_items(self.shared_utils.devices, "role.id", 29):
             hostname = get(device, "name", required=True)
             result = {}
             override = {}
@@ -72,7 +72,7 @@ class InventoryRenderer:
                 merge(result, fab_inventory_module.render())
 
             with open(os.path.join(host_vars_paths, f"{hostname}.yml"), "w") as fd:
-                yaml.dump(result, fd)
+                yaml.dump(result, fd, sort_keys=False)
 
     def get_group_vars(self, out_path: str, override_path: str):
         get_group_vars(self.shared_utils, out_path, override_path)

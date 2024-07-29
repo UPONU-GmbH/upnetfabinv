@@ -18,4 +18,4 @@ class ConnectedEndpoints(InventoryFacts, ServersMixin):
 
     @cached_property
     def _filename(self):
-        return "CONNECTED_EDNPOINTS.yml"
+        return "CONNECTED_ENDPOINTS.yml"

@@ -20,7 +20,7 @@ class IpAddressingMixin:
         """
 
         loopback_ips = get(
-            get_item(get(node, "interfaces"), "name", "loopback0"), "ips", default=[]
+            get_item(get(node, "interfaces"), "name", "loopback0", value_case_sensitive=False), "ips", default=[]
         )
 
         if len(loopback_ips) > 0:
@@ -30,7 +30,7 @@ class IpAddressingMixin:
 
     def get_vtep_ip(self: SharedUtils, node: dict) -> str | None:
         vtep_ips = get(
-            get_item(get(node, "interfaces"), "name", "loopback1"), "ips", default=[]
+            get_item(get(node, "interfaces"), "name", "loopback1", value_case_sensitive=False), "ips", default=[]
         )
 
         if len(vtep_ips) > 0:

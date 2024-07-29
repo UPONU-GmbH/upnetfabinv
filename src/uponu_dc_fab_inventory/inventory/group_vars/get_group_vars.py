@@ -40,7 +40,7 @@ def _render_group_vars(
     result = group_vars_module.render()
 
     override = {}
-    override_inventory_path = os.path.join(override_path, group_vars_module._filename)
+    override_inventory_path = os.path.join(override_path, "group_vars", group_vars_module._filename)
     if os.path.exists(override_inventory_path):
         with open(override_inventory_path, "r") as fd:
             override = yaml.safe_load(fd)

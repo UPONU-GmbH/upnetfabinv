@@ -3,14 +3,16 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
+from uponu_dc_fab_inventory.utils import get_all
+
 from typing import TYPE_CHECKING
+
 
 if TYPE_CHECKING:
     from .shared_utils import SharedUtils
 
 
-class BaseMixin:
-    @cached_property
-    def az_name(self: SharedUtils) -> str:
-        return "DC1"
+class NodeGroupsMixin:
+
+    def get_node_groups(self: SharedUtils, nodes: list[dict]) -> list:
+        return set(get_all(nodes, "custom_fields.avd_switch_group_name"))

@@ -3,12 +3,11 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+import re
 
 from functools import cached_property
 from uponu_dc_fab_inventory.utils import get, get_all_items, get_item, get_all, merge
 from uponu_dc_fab_inventory.errors import UPONUDCFabInventoryError
-
-from pprint import pprint
 
 from typing import TYPE_CHECKING
 
@@ -54,6 +53,8 @@ class ServersMixin:
         for lag_interface in lag_interfaces:
             lag_name = get(lag_interface, "interface.lag.name")
             connected_endpoint = get(lag_interface, "interface.connected_endpoints")[0]
+            link_peer = get(lag_interface, "interface.link_peers")[0]
+
             if lag_name not in port_channels.keys():
                 port_channels[lag_name] = {
                     "endpoint_ports": [],
@@ -72,11 +73,9 @@ class ServersMixin:
             peer_switch = get_item(
                 self.shared_utils.devices, "id", get(connected_endpoint, "device.id")
             )
-            peer_interface = get_item(
-                get(peer_switch, "interfaces"),
-                "interface.id",
-                get(connected_endpoint, "id"),
-            )
+
+            peer_interface = self._get_peer_interface(peer_switch, connected_endpoint, link_peer)
+            
             peer_lag = get(peer_interface, "interface.lag", required=True)
             peer_portchannel_interface = get_item(
                 get(peer_switch, "interfaces"), "interface.id", get(peer_lag, "id")
@@ -93,7 +92,7 @@ class ServersMixin:
                 get(connected_endpoint, "device.name")
             )
             port_channels[lag_name]["switch_ports"].append(
-                get(connected_endpoint, "name")
+                get(peer_interface, "name")
             )
 
         merge(port_channels, vlan_settings)
@@ -116,6 +115,11 @@ class ServersMixin:
         ]
 
         for interface in physical_interfaces:
+
+            if len(get(interface, "interface.connected_endpoints", [])) == 0:
+                continue
+            
+
             connected_endpoint = get(interface, "interface.connected_endpoints")[0]
 
             res.append(
@@ -168,3 +172,40 @@ class ServersMixin:
             vlan_settings["vlans"] = get(interface, "interface.untagged_vlan.vid")
 
         return vlan_settings
+
+    def _get_peer_interface(self: ConnectedEndpoints, peer_switch: dict, connected_endpoint: dict, link_peer: dict) -> dict:
+        """
+        Returns the correct peer interface, also works with breakout interfaces
+
+        In Netbox it is not possible to directly use breakout interfaces and connecting them.
+        As a workaround we create normal interfaces and only connect the main (parent) interface.
+        The correct interface number is then retrieved by exploiting the number of the breakout cable in the link_peer.
+
+        For now this only works with a breakout box which is an actual device in netbox with front and backend ports.
+        """
+
+        # netbox creates a colon and the breakout number at the of the interface name
+        # Ex: LC:4
+        if get(link_peer, "id") != get(connected_endpoint, "id") and len(interface_name_split:=get(link_peer, "name").split(":")) > 1:
+            
+            subinterface_number = interface_name_split[-1]
+
+            subinterface_name = re.sub(r"(Ethernet\s*\d*\/)\d*$", r"\1", get(connected_endpoint, "name")) + subinterface_number
+
+            peer_interface = get_item(
+                get(peer_switch, "interfaces"),
+                "interface.name",
+                subinterface_name
+            )
+
+
+        else:
+
+            peer_interface = get_item(
+                get(peer_switch, "interfaces"),
+                "interface.id",
+                get(connected_endpoint, "id"),
+            )
+
+        return peer_interface
+

@@ -30,6 +30,7 @@ class SpineMixin:
             "name": get(node, "name", required=True),
             "id": get(node, "custom_fields.avd_switch_id", required=True),
             "mgmt_ip": get(node, "oob_ip.address", required=True),
+            "bgp_as": get(node, "custom_fields.avd_bgp_as", required=True)
         }
 
         if platform := get(node, "custom_fields.avd_platform"):
