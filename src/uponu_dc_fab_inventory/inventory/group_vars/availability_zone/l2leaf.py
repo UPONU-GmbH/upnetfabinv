@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from functools import cached_property
 
-from uponu_dc_fab_inventory.utils import get_all_items, get, get_all, merge
+from uponu_dc_fab_inventory.utils import get_all_items, get, get_item, merge
 
 from typing import TYPE_CHECKING
 
@@ -20,9 +20,7 @@ class L2leafMixin:
     @cached_property
     def l2leaf(self: AvailabilityZone):
         l2leafs = get_all_items(
-            get_all_items(
-                self.shared_utils.l3leafs, "custom_fields.avd_node_type", "l2leaf"
-            ),
+            self.shared_utils.l2leafs,
             "site.name",
             self._avialability_zone,
         )
@@ -84,10 +82,19 @@ class L2leafMixin:
             for connected_endpoint in get(
                 interface, "interface.connected_endpoints", default=[]
             ):
+                
                 if peer_device := get(connected_endpoint, "device"):
-                    peer = self.shared_utils.device(get(peer_device, "id"))
+                    peer = get_item(
+                        self.shared_utils.devices, "id",get(peer_device, "id")
+                    )
 
-                    if get(peer, "custom_fields.avd_node_type") == "spine":
+                    peer_interface = get_item(get(peer, "interfaces"), "interface.name", get(connected_endpoint, "name"))
+
+                    if get(peer_interface, "interface.mgmt_only", default=False):
+                        continue
+
+
+                    if get(peer, "custom_fields.avd_node_type") in ["l3leaf", "l3leaf_os10"]:
                         uplinks["uplink_switches"].append(get(peer, "name"))
                         uplinks["uplink_switch_interfaces"].append(
                             get(connected_endpoint, "name")

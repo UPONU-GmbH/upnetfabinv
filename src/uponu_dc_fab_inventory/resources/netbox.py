@@ -9,6 +9,7 @@ import pynetbox
 from .config import Config
 
 from uponu_dc_fab_inventory.utils import merge, get_all
+import urllib3
 
 from typing import TYPE_CHECKING
 
@@ -26,6 +27,10 @@ class NetboxClient:
         self.netbox = pynetbox.api(
             config.get("netbox.NETBOX_URL"), config.get("netbox.NETBOX_API_TOKEN")
         )
+
+        if not config.get("NETBOX_VERIFY_SSL"):
+            self.netbox.http_session.verify = False
+            urllib3.disable_warnings()
 
         config.get("netbox.dcim_devices_default_filter")
 

@@ -49,7 +49,7 @@ class ServersMixin:
         port_channels = {}
 
         vlan_settings = {}
-
+        
         for lag_interface in lag_interfaces:
             lag_name = get(lag_interface, "interface.lag.name")
             connected_endpoint = get(lag_interface, "interface.connected_endpoints")[0]
@@ -62,7 +62,7 @@ class ServersMixin:
                     "switches": [],
                     "spanning_tree_portfast": "edge",
                     "port_channel": {
-                        "description": "PortChannel " + get(server, "name"),
+                        "description": "PortChannel " + get(server, "name") + " " + lag_name,
                         "mode": "active",
                     },
                 }
@@ -80,6 +80,9 @@ class ServersMixin:
             peer_portchannel_interface = get_item(
                 get(peer_switch, "interfaces"), "interface.id", get(peer_lag, "id")
             )
+
+            peer_portchannel_id = re.search(r"^Port-Channel(\d*)$", get(peer_portchannel_interface, "name"), flags=re.IGNORECASE).group(1)
+            port_channels[lag_name]["port_channel"]["channel_id"] = peer_portchannel_id
 
             merge(
                 vlan_settings[lag_name],
@@ -119,16 +122,28 @@ class ServersMixin:
             if len(get(interface, "interface.connected_endpoints", [])) == 0:
                 continue
             
-
             connected_endpoint = get(interface, "interface.connected_endpoints")[0]
+            link_peer = get(interface, "interface.link_peers")[0]
+            peer_switch = get_item(
+                self.shared_utils.devices, "id", get(connected_endpoint, "device.id")
+            )
+            peer_interface = self._get_peer_interface(peer_switch, connected_endpoint, link_peer)
+
+            try:
+                vlan_settings = self._get_server_adapters_interfces_vlan(peer_interface)
+            except UPONUDCFabInventoryError as e:
+                print(f"device {get(peer_switch, "name")}")
+                print(e)
+                raise
+
 
             res.append(
-                {
+                merge({
                     "endpoint_ports": [get(interface, "name")],
                     "switch_ports": [get(connected_endpoint, "name")],
                     "switches": [get(connected_endpoint, "device.name")],
                     "spanning_tree_portfast": "edge",
-                }
+                }, vlan_settings)
             )
 
         return res
@@ -149,7 +164,7 @@ class ServersMixin:
 
         if mode is None:
             raise UPONUDCFabInventoryError(
-                f"Interface mode not allowed, Netbox mode is {get(interface, "interface.mode.value")}"
+                f"Interface mode not allowed, Netbox mode is '{get(interface, "interface.mode.value")}' interface '{get(interface, "name")}'"
             )
 
         vlan_settings = {

@@ -12,9 +12,10 @@ from uponu_dc_fab_inventory.utils import get
 
 from .spine import SpineMixin
 from .l3leaf import L3leafMixin
+from .l2leaf import L2leafMixin
 
 
-class AvailabilityZone(InventoryFacts, SpineMixin, L3leafMixin):
+class AvailabilityZone(InventoryFacts, SpineMixin, L3leafMixin, L2leafMixin):
     def __init__(self, shared_utils: SharedUtils, avialability_zone: str) -> None:
         super().__init__(shared_utils)
 
