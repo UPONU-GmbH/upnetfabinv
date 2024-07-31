@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import re
+import sys
 
 from functools import cached_property
 from uponu_dc_fab_inventory.utils import get, get_all_items, get_item, get_all, merge
@@ -84,11 +85,17 @@ class ServersMixin:
             peer_portchannel_id = re.search(r"^Port-Channel(\d*)$", get(peer_portchannel_interface, "name"), flags=re.IGNORECASE).group(1)
             port_channels[lag_name]["port_channel"]["channel_id"] = peer_portchannel_id
 
-            merge(
-                vlan_settings[lag_name],
-                self._get_server_adapters_interfces_vlan(peer_portchannel_interface),
-                same_key_strategy="must_match",
-            )
+            try:
+                merge(
+                    vlan_settings[lag_name],
+                    self._get_server_adapters_interfces_vlan(peer_portchannel_interface),
+                    same_key_strategy="must_match",
+                )
+            except Exception as e:
+                print(f"device {get(peer_switch, "name")}, {get(peer_portchannel_interface, "name")}")
+                print(e)
+                sys.exit(1)
+
 
             port_channels[lag_name]["endpoint_ports"].append(get(lag_interface, "name"))
             port_channels[lag_name]["switches"].append(
@@ -131,11 +138,10 @@ class ServersMixin:
 
             try:
                 vlan_settings = self._get_server_adapters_interfces_vlan(peer_interface)
-            except UPONUDCFabInventoryError as e:
+            except Exception as e:
                 print(f"device {get(peer_switch, "name")}")
                 print(e)
-                raise
-
+                sys.exit(1)
 
             res.append(
                 merge({
