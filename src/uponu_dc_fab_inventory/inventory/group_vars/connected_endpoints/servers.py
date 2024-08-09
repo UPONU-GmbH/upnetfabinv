@@ -50,6 +50,7 @@ class ServersMixin:
         port_channels = {}
 
         vlan_settings = {}
+        lacp_fallback_settings = {}
         
         for lag_interface in lag_interfaces:
             lag_name = get(lag_interface, "interface.lag.name")
@@ -70,6 +71,9 @@ class ServersMixin:
 
             if lag_name not in vlan_settings.keys():
                 vlan_settings[lag_name] = {}
+
+            if lag_name not in lacp_fallback_settings.keys():
+                lacp_fallback_settings[lag_name] = {}
 
             peer_switch = get_item(
                 self.shared_utils.devices, "id", get(connected_endpoint, "device.id")
@@ -96,6 +100,18 @@ class ServersMixin:
                 print(e)
                 sys.exit(1)
 
+            # get lacp fallback, values must match
+            try:
+                merge(
+                    lacp_fallback_settings[lag_name],
+                    self._get_server_adapters_interface_lacp_fallback(peer_portchannel_interface),
+                    same_key_strategy="must_match",
+                )
+            except Exception as e:
+                print(f"device {get(peer_switch, "name")}, {get(peer_portchannel_interface, "name")}")
+                print(e)
+                sys.exit(1)
+
 
             port_channels[lag_name]["endpoint_ports"].append(get(lag_interface, "name"))
             port_channels[lag_name]["switches"].append(
@@ -106,6 +122,7 @@ class ServersMixin:
             )
 
         merge(port_channels, vlan_settings)
+        merge(port_channels, lacp_fallback_settings)
         return list(port_channels.values())
 
     def _get_server_adapters_interfces(
@@ -230,3 +247,29 @@ class ServersMixin:
 
         return peer_interface
 
+
+    def _get_server_adapters_interface_lacp_fallback(
+        self: ConnectedEndpoints, interface: dict
+    ) -> dict:
+        lacp_fallback_settings = {}
+
+        lacp_fallback_enabled = get(interface, "interface.custom_fields.avd_lacp_fallback_enabled")
+
+        if not lacp_fallback_enabled:
+            return lacp_fallback_settings
+        
+
+        lacp_fallback_timeout = get(interface, "interface.custom_fields.avd_lacp_fallback_timeout", 90) # 90 is the arista default value
+
+
+        lacp_fallback_settings = {
+            "port_channel": {
+                "lacp_fallback": {
+                    "mode": "static",
+                    "timeout": lacp_fallback_timeout
+                }
+            }
+        }
+    
+
+        return lacp_fallback_settings

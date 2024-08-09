@@ -258,6 +258,34 @@ def setup(ctx: Context):
                 name="avd_endpoint_types"
             ).id,
         },
+        {
+            "content_types": ["dcim.interface"],
+            "name": "avd_lacp_fallback_enabled",
+            "label": "LACP Fallback",
+            "group_name": "AVD",
+            "type": "boolean",
+            "description": "Only applicable for port-channel interfaces",
+            "search_weight": 1000,
+            "filter_logic": "loose",
+            "ui_visibility": "visible",
+            "ui_editable": "yes",
+            "weight": 100,
+            "is_cloneable": True,
+        },
+        {
+            "content_types": ["dcim.interface"],
+            "name": "avd_lacp_fallback_timeout",
+            "label": "LACP Fallback timeout",
+            "group_name": "AVD",
+            "type": "integer",
+            "description": "Only applicable for port-channel interfaces",
+            "search_weight": 1000,
+            "filter_logic": "loose",
+            "ui_visibility": "visible",
+            "ui_editable": "yes",
+            "weight": 100,
+            "is_cloneable": False,
+        },
     ]
 
     for custom_field_data in custom_fields_data:
