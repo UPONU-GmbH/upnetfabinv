@@ -24,3 +24,7 @@ class AvailabilityZone(InventoryFacts, SpineMixin, L3leafMixin, L2leafMixin):
     @cached_property
     def _filename(self):
         return f"{self._avialability_zone}.yml"
+    
+    @cached_property
+    def _dirname(self):
+        return f"{self._avialability_zone}"
