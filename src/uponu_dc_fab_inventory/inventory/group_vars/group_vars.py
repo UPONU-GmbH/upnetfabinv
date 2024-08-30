@@ -15,8 +15,9 @@ if TYPE_CHECKING:
 
 
 class GroupVars(InventoryFacts):
-    def __init__(self, filename, shared_utils: SharedUtils) -> None:
+    def __init__(self, dirname, filename, shared_utils: SharedUtils) -> None:
         super().__init__(shared_utils)
+        self._dirname = dirname
         self._filename = filename
 
     def save(self, our_path: str, override_path: str):

@@ -47,7 +47,12 @@ def _render_group_vars(
 
         merge(result, override)
 
-    with open(os.path.join(group_vars_path, group_vars_module._filename), "w") as fd:
+    try:
+        os.mkdir(os.path.join(group_vars_path, group_vars_module._dirname))
+    except FileExistsError:
+        pass
+    
+    with open(os.path.join(group_vars_path, group_vars_module._dirname, group_vars_module._filename), "w") as fd:
         yaml.dump(result, fd, sort_keys=False)
 
 

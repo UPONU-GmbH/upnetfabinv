@@ -25,3 +25,7 @@ class L3LeavesEOS(
     @cached_property
     def _filename(self):
         return f"{self._avialability_zone}_L3_LEAVES_EOS.yml"
+    
+    @cached_property
+    def _dirname(self):
+        return f"{self._avialability_zone}_L3_LEAVES_EOS"

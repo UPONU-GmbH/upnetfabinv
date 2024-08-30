@@ -34,3 +34,7 @@ class L3LeavesOS10(
     @cached_property
     def _filename(self):
         return f"{self._avialability_zone}_L3_LEAVES_OS10.yml"
+    
+    @cached_property
+    def _dirname(self):
+        return f"{self._avialability_zone}_L3_LEAVES_OS10"

@@ -20,3 +20,7 @@ class NetworkServices(InventoryFacts, TennantsMixin):
     @cached_property
     def _filename(self):
         return "NETWORK_SERVICES.yml"
+    
+    @cached_property
+    def _dirname(self):
+        return "NETWORK_SERVICES"

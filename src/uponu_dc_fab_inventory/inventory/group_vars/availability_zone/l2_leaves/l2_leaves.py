@@ -25,3 +25,7 @@ class L2Leaves(
     @cached_property
     def _filename(self):
         return f"{self._avialability_zone}_L2_LEAVES.yml"
+    
+    @cached_property
+    def _dirname(self):
+        return f"{self._avialability_zone}_L2_LEAVES"
