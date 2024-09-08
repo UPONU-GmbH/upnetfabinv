@@ -9,6 +9,7 @@ import yaml
 
 from .network_services import NetworkServices
 from .connected_endpoints import ConnectedEndpoints
+from .fabric import ConnectedEndpointKeys
 
 from .availability_zone import AvailabilityZone
 from .availability_zone.spines import Spines
@@ -23,7 +24,7 @@ if TYPE_CHECKING:
     from uponu_dc_fab_inventory.shared_utils import SharedUtils
     from uponu_dc_fab_inventory.inventoryfacts import InventoryFacts
 
-FAB_INVENTORY_GROUP_VARS_CLASSES = [NetworkServices, ConnectedEndpoints]
+FAB_INVENTORY_GROUP_VARS_CLASSES = [NetworkServices, ConnectedEndpoints, ConnectedEndpointKeys]
 
 FAB_INVENTORY_GROUP_VARS_CLASSES_AVAILABILITY_ZONE = [
     AvailabilityZone,

@@ -10,9 +10,10 @@ from functools import cached_property
 from uponu_dc_fab_inventory.shared_utils.shared_utils import SharedUtils
 
 from .servers import ServersMixin
+from .switches_oob import SwitchesOOBMixin
 
 
-class ConnectedEndpoints(InventoryFacts, ServersMixin):
+class ConnectedEndpoints(InventoryFacts, ServersMixin, SwitchesOOBMixin):
     def __init__(self, shared_utils: SharedUtils) -> None:
         super().__init__(shared_utils)
 

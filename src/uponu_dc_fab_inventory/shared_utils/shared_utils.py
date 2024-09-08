@@ -14,6 +14,8 @@ from .vlans import VlansMixin
 from .servers import ServersMixin
 from .node_groups import NodeGroupsMixin
 from .mlag import MLAGMixin
+from .switches import SwitchesMixin
+from .interfaces import InterfacesMixin
 
 from typing import TYPE_CHECKING
 
@@ -30,7 +32,9 @@ class SharedUtils(
     VlansMixin,
     ServersMixin,
     NodeGroupsMixin,
-    MLAGMixin
+    MLAGMixin,
+    SwitchesMixin,
+    InterfacesMixin
 ):
     def __init__(self, config: Config) -> None:
         self.config = config
