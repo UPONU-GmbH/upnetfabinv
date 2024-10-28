@@ -52,3 +52,13 @@ class InterfacesMixin:
             )
 
         return peer_interface
+    
+    @staticmethod
+    def get_interface_speed_value(speed: int) -> str:
+
+        res = None
+
+        if speed == 25000000:
+            res = "25G"
+
+        return res

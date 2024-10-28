@@ -101,4 +101,8 @@ class L2leafMixin:
                         )
                         uplinks["uplink_interfaces"].append(get(interface, "name"))
 
+                        # TODO: check if interfaces speed is the same for all uplinks
+                        if speed := self.shared_utils.get_interface_speed_value(get(peer_interface, "interface.speed")):
+                            uplinks["uplink_switch_interface_speed"] = speed
+
         return uplinks
