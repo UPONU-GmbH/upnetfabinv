@@ -112,7 +112,11 @@ class ServersMixin:
                 print(e)
                 sys.exit(1)
 
-
+            # get interface speed
+            # TODO: check if interfaces speed is the same for all links
+            if speed := self.shared_utils.get_interface_speed_value(get(peer_interface, "interface.speed")):
+                port_channels[lag_name]["speed"] = speed
+            
             port_channels[lag_name]["endpoint_ports"].append(get(lag_interface, "name"))
             port_channels[lag_name]["switches"].append(
                 get(connected_endpoint, "device.name")
@@ -160,13 +164,18 @@ class ServersMixin:
                 print(e)
                 sys.exit(1)
 
-            res.append(
-                merge({
+            adapter = {
                     "endpoint_ports": [get(interface, "name")],
                     "switch_ports": [get(connected_endpoint, "name")],
                     "switches": [get(connected_endpoint, "device.name")],
                     "spanning_tree_portfast": "edge",
-                }, vlan_settings)
+            }
+
+            if speed := self.shared_utils.get_interface_speed_value(get(interface, "interface.speed")):
+                adapter["speed"] = speed
+
+            res.append(
+                merge(adapter, vlan_settings)
             )
 
         return res
