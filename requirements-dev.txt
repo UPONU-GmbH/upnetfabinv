@@ -1,0 +1,5 @@
+# Installing uponu_dc_fab_inventory as editable install.
+# Providing config-settings in a requirements file is only supported by very recent pip versions.
+# The editable_mode=compat is required for pylance to work correctly.
+#The path is relative to the root of the repo, so this only works when executed from there.
+-e . --config-settings editable_mode=compat
