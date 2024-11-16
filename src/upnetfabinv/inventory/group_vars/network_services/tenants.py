@@ -7,7 +7,7 @@ from __future__ import annotations
 from functools import cached_property
 
 from upnetfabinv.utils import get_all_items, get, get_all, merge
-from upnetfabinv.errors import UPONUDCFabInventoryError
+from upnetfabinv.errors import UpnetfabinvError
 
 from typing import TYPE_CHECKING
 
@@ -68,7 +68,7 @@ class TennantsMixin:
             vlan = self.shared_utils.vlan(vlan_id)
 
             if get(vlan, "custom_fields.avd_is_l2vlan"):
-                raise UPONUDCFabInventoryError(
+                raise UpnetfabinvError(
                     f"Vlan cannot be an svi and l2vlan at the same time, netbox_id: {vlan_id}"
                 )
 

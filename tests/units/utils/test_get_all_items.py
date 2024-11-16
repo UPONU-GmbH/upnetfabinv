@@ -5,7 +5,7 @@
 import pytest
 
 from upnetfabinv.utils import get_all_items
-from upnetfabinv.errors import UPONUDCFabInventoryMissingVariableError
+from upnetfabinv.errors import UpnetfabinvMissingVariableError
 
 
 from contextlib import contextmanager
@@ -148,7 +148,7 @@ GET_ALL_ITEMS_DATA = [
         "expected_result": None,
         "expected_length": 0,
         "expected_exception": pytest.raises(
-            UPONUDCFabInventoryMissingVariableError, match="key5.missing_required"
+            UpnetfabinvMissingVariableError, match="key5.missing_required"
         ),
     },
 ]

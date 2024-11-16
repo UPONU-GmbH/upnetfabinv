@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import Any
 from .get import get
 
-from upnetfabinv.errors import UPONUDCFabInventoryMissingVariableError
+from upnetfabinv.errors import UpnetfabinvMissingVariableError
 
 
 def get_all_items(
@@ -39,7 +39,7 @@ def get_all_items(
 
     Raises
     ------
-    UPONUDCFabInventoryMissingVariableError
+    UpnetfabinvMissingVariableError
         If the key and value is not found and "required" == True
     """
 
@@ -57,6 +57,6 @@ def get_all_items(
                 output.append(item)
 
     if required and len(output) == 0:
-        raise UPONUDCFabInventoryMissingVariableError(key)
+        raise UpnetfabinvMissingVariableError(key)
 
     return output

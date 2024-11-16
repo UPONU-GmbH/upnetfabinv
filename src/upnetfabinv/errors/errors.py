@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 
 
-class UPONUDCFabInventoryError(Exception):
+class UpnetfabinvError(Exception):
     def __init__(
         self, message="An error has occourd in a upnetfabinv module"
     ):
@@ -11,5 +11,5 @@ class UPONUDCFabInventoryError(Exception):
         super().__init__(self.message)
 
 
-class UPONUDCFabInventoryMissingVariableError(UPONUDCFabInventoryError):
+class UpnetfabinvMissingVariableError(UpnetfabinvError):
     pass

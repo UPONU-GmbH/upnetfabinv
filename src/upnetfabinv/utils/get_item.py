@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import Any
 from .get import get
 
-from upnetfabinv.errors import UPONUDCFabInventoryMissingVariableError
+from upnetfabinv.errors import UpnetfabinvMissingVariableError
 
 
 def get_item(
@@ -44,7 +44,7 @@ def get_item(
 
     Raises
     ------
-    UPONUDCFabInventoryMissingVariableError
+    UpnetfabinvMissingVariableError
         If the key and value is not found and "required" == True
     """
     if isinstance(data, list):
@@ -66,4 +66,4 @@ def get_item(
                         return item
 
     if required:
-        raise UPONUDCFabInventoryMissingVariableError(key)
+        raise UpnetfabinvMissingVariableError(key)

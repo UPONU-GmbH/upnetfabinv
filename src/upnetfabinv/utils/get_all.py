@@ -29,7 +29,7 @@ def get_all(
 
     Raises
     ------
-    UPONUDCFabInventoryMissingVariableError
+    UpnetfabinvMissingVariableError
         If the key and value is not found and "required" == True
     """
 

@@ -8,7 +8,7 @@ import sys
 
 from functools import cached_property
 from upnetfabinv.utils import get, get_item, get_all, merge, get_all_items
-from upnetfabinv.errors import UPONUDCFabInventoryError
+from upnetfabinv.errors import UpnetfabinvError
 
 from typing import TYPE_CHECKING
 
@@ -89,7 +89,7 @@ class SwitchesOOBMixin:
         )
 
         if mode is None:
-            raise UPONUDCFabInventoryError(
+            raise UpnetfabinvError(
                 f"Interface mode not allowed, Netbox mode is '{get(interface, "interface.mode.value")}' interface '{get(interface, "name")}'"
             )
 

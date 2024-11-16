@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property, cache
 from typing import TYPE_CHECKING
 from upnetfabinv.utils import get, get_all_items, get_all
-from upnetfabinv.errors import UPONUDCFabInventoryMissingVariableError
+from upnetfabinv.errors import UpnetfabinvMissingVariableError
 
 
 if TYPE_CHECKING:
@@ -28,7 +28,7 @@ class VlansMixin:
 
         vlan = get_all_items(self.vlans, "id", vlan_id)
         if len(vlan) == 0:
-            raise UPONUDCFabInventoryMissingVariableError(
+            raise UpnetfabinvMissingVariableError(
                 f"VLAN with netbox id {vlan_id} does not exisis"
             )
 
