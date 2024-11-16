@@ -4,8 +4,8 @@
 
 import pytest
 
-from uponu_dc_fab_inventory.utils import get_all_items
-from uponu_dc_fab_inventory.errors import UPONUDCFabInventoryMissingVariableError
+from upnetfabinv.utils import get_all_items
+from upnetfabinv.errors import UPONUDCFabInventoryMissingVariableError
 
 
 from contextlib import contextmanager

@@ -3,11 +3,11 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "uponu_dc_fab_inventory"
+name = "upnetfabinv"
 requires-python = ">=3.8"
 dynamic = ["version"]
 dependencies = [
-    "pynetbox",
+    "pynetbox>=7.4.0",
     "deepmerge>=1.1.0",
     "PyYAML>=6.0.0",
     "click>=8.1"
@@ -16,8 +16,7 @@ dependencies = [
 [project.optional-dependencies]
 
 dev = [
-  "pylint-pydantic>=0.2.4",
-  "pylint>=2.17.5",
+  "ruff>=0.7.4",
   "pytest-asyncio>=0.21.1",
   "pytest-cov>=4.1.0",
   "pytest-dependency",
@@ -28,4 +27,4 @@ dev = [
 
 [project.scripts]
 
-upnetfabinv = "uponu_dc_fab_inventory.cli:cli"
+upnetfabinv = "upnetfabinv.cli:cli"
