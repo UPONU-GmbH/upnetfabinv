@@ -95,13 +95,6 @@ def group_vars(ctx: Context):
     inventory_renderer.get_group_vars(out_path, override_path)
 
 
-@ansible_inventory.command()
-def config():
-    conf = Config("examples/config.toml")
-
-    print(conf.get("fabric.device_role_name"))
-
-
 cli.add_command(netbox)
 
 if __name__ == "__main__":
